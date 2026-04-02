@@ -14,8 +14,8 @@ from dbt.jsonschemas.jsonschemas import (
 )
 from dbt.tests.util import safe_set_invocation_context
 from dbt_common.context import get_invocation_context
+from dbt_common.events.event_catcher import EventCatcher
 from dbt_common.events.event_manager_client import add_callback_to_manager
-from tests.utils import EventCatcher
 
 
 class TestValidateModelConfigNoError:

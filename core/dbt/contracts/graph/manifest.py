@@ -1015,6 +1015,7 @@ class Manifest(MacroMethods, dbtClassMixin):
             "saved_queries": {
                 k: v.to_dict(omit_none=False) for k, v in self.saved_queries.items()
             },
+            "unit_tests": {k: v.to_dict(omit_none=False) for k, v in self.unit_tests.items()},
         }
 
     def build_disabled_by_file_id(self):
@@ -1584,6 +1585,8 @@ class Manifest(MacroMethods, dbtClassMixin):
             # don't raise this reference error for ad hoc 'preview' queries
             and node.resource_type != NodeType.SqlOperation
             and node.resource_type != NodeType.RPCCall  # TODO: rm
+            # macros are outside the group/access system (e.g. run-operation)
+            and node.resource_type != NodeType.Macro
         )
         target_dependency = dependencies.get(target_model.package_name)
         restrict_package_access = target_dependency.restrict_access if target_dependency else False
@@ -1610,6 +1613,8 @@ class Manifest(MacroMethods, dbtClassMixin):
             # don't raise this reference error for ad hoc 'preview' queries
             and node.resource_type != NodeType.SqlOperation
             and node.resource_type != NodeType.RPCCall  # TODO: rm
+            # macros are outside the group/access system (e.g. run-operation)
+            and node.resource_type != NodeType.Macro
         )
         target_dependency = dependencies.get(target_model.package_name)
         restrict_package_access = target_dependency.restrict_access if target_dependency else False
