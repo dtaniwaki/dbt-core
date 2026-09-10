@@ -1,0 +1,6 @@
+kind: Security
+body: Allow sqlparse 0.6.x to pick up security fixes for CVE-2026-84305
+time: 2026-09-10T10:32:27.665661+00:00
+custom:
+  Author: jmdc-sotsuka
+  Issue: NA
