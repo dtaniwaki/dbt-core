@@ -1,3 +1,4 @@
+from dataclasses import replace
 from unittest.mock import patch
 
 import pytest
@@ -8,6 +9,7 @@ from core.dbt.contracts.graph.manifest import Manifest
 from dbt.artifacts.resources.types import NodeType
 from dbt.artifacts.resources.v1.metric import (
     CumulativeTypeParams,
+    MetricInput,
     MetricTimeWindow,
     MetricTypeParams,
 )
@@ -26,6 +28,7 @@ from dbt.contracts.graph.semantic_manifest import SemanticManifest
 from dbt.events.types import TimeDimensionsRequireGranularityDeprecation
 from dbt_common.events.event_catcher import EventCatcher
 from dbt_common.events.event_manager_client import add_callback_to_manager
+from tests.functional.utils import requires_metric_input_exclude_dimensions
 
 
 # Overwrite the default nods to construct the manifest
@@ -49,6 +52,26 @@ def metrics(
 
 
 class TestSemanticManifest:
+
+    @requires_metric_input_exclude_dimensions
+    def test_metric_input_exclude_dimensions_in_pydantic_manifest(self, manifest, metric):
+        ratio_metric = replace(
+            metric,
+            name="revenue_share",
+            unique_id="metric.test.revenue_share",
+            type=MetricType.RATIO,
+            type_params=MetricTypeParams(
+                numerator=MetricInput(name="revenue"),
+                denominator=MetricInput(name="revenue", exclude_dimensions=["region"]),
+            ),
+        )
+        manifest.metrics[ratio_metric.unique_id] = ratio_metric
+
+        pydantic_manifest = SemanticManifest(manifest)._get_pydantic_semantic_manifest()
+
+        pydantic_metric = next(m for m in pydantic_manifest.metrics if m.name == "revenue_share")
+        assert pydantic_metric.type_params.numerator.exclude_dimensions == ()
+        assert pydantic_metric.type_params.denominator.exclude_dimensions == ("region",)
 
     def test_validate(self, manifest):
         with patch("dbt.contracts.graph.semantic_manifest.get_flags") as patched_get_flags:

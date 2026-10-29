@@ -311,6 +311,7 @@ class MetricParser(YamlReader):
                 alias=unparsed.alias,
                 offset_window=self._get_optional_time_window(unparsed.offset_window),
                 offset_to_grain=unparsed.offset_to_grain,
+                exclude_dimensions=list(unparsed.exclude_dimensions),
             )
 
     def _get_optional_metric_input(

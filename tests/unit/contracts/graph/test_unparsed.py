@@ -29,6 +29,7 @@ from dbt.contracts.graph.unparsed import (
     UnparsedExposure,
     UnparsedMacro,
     UnparsedMetric,
+    UnparsedMetricInput,
     UnparsedMetricInputMeasure,
     UnparsedMetricTypeParams,
     UnparsedMetricV2,
@@ -952,6 +953,25 @@ class TestUnparsedConversionTypeParams(ContractTestCase):
         tst = self.get_old_style_ok_dict()
         del tst["conversion_measure"]
         self.assert_fails_validation(tst)
+
+
+class TestUnparsedMetricInput(ContractTestCase):
+    ContractType = UnparsedMetricInput
+
+    def test_exclude_dimensions_default_empty(self):
+        metric_input = self.ContractType.from_dict({"name": "revenue"})
+        assert metric_input.exclude_dimensions == []
+
+    def test_exclude_dimensions_ok(self):
+        dct = {"name": "revenue", "exclude_dimensions": ["region", "customer__segment"]}
+        metric_input = self.ContractType.from_dict(dct)
+        assert metric_input.exclude_dimensions == ["region", "customer__segment"]
+
+    def test_exclude_dimensions_bad_type(self):
+        self.assert_fails_validation({"name": "revenue", "exclude_dimensions": "region"})
+
+    def test_unknown_key_fails(self):
+        self.assert_fails_validation({"name": "revenue", "exclude_dimension": ["region"]})
 
 
 class BaseTestUnparsedMetric:

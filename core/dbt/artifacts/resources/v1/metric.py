@@ -68,6 +68,7 @@ class MetricInput(dbtClassMixin):
     alias: Optional[str] = None
     offset_window: Optional[MetricTimeWindow] = None
     offset_to_grain: Optional[str] = None
+    exclude_dimensions: List[str] = field(default_factory=list)
 
     def as_reference(self) -> MetricReference:
         return MetricReference(element_name=self.name)
