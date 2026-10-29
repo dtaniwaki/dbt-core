@@ -214,6 +214,7 @@ def complex_metric_input(metric_time_window, where_filter) -> MetricInput:
         alias="aliased_metric_input",
         offset_window=metric_time_window,
         offset_to_grain=TimeGranularity.DAY.value,
+        exclude_dimensions=["region"],
     )
 
 

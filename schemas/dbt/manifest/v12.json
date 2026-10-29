@@ -13121,6 +13121,12 @@
                           }
                         ],
                         "default": null
+                      },
+                      "exclude_dimensions": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
                       }
                     },
                     "additionalProperties": false,
@@ -13223,6 +13229,12 @@
                           }
                         ],
                         "default": null
+                      },
+                      "exclude_dimensions": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
                       }
                     },
                     "additionalProperties": false,
@@ -13386,6 +13398,12 @@
                             }
                           ],
                           "default": null
+                        },
+                        "exclude_dimensions": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
                         }
                       },
                       "additionalProperties": false,
@@ -13660,6 +13678,12 @@
                                   }
                                 ],
                                 "default": null
+                              },
+                              "exclude_dimensions": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
                               }
                             },
                             "additionalProperties": false,
@@ -13762,6 +13786,12 @@
                                   }
                                 ],
                                 "default": null
+                              },
+                              "exclude_dimensions": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
                               }
                             },
                             "additionalProperties": false,
@@ -13986,6 +14016,12 @@
                                   }
                                 ],
                                 "default": null
+                              },
+                              "exclude_dimensions": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
                               }
                             },
                             "additionalProperties": false,
@@ -27210,6 +27246,12 @@
                                     }
                                   ],
                                   "default": null
+                                },
+                                "exclude_dimensions": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
                                 }
                               },
                               "additionalProperties": false,
@@ -27312,6 +27354,12 @@
                                     }
                                   ],
                                   "default": null
+                                },
+                                "exclude_dimensions": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
                                 }
                               },
                               "additionalProperties": false,
@@ -27475,6 +27523,12 @@
                                       }
                                     ],
                                     "default": null
+                                  },
+                                  "exclude_dimensions": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string"
+                                    }
                                   }
                                 },
                                 "additionalProperties": false,
@@ -27749,6 +27803,12 @@
                                             }
                                           ],
                                           "default": null
+                                        },
+                                        "exclude_dimensions": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string"
+                                          }
                                         }
                                       },
                                       "additionalProperties": false,
@@ -27851,6 +27911,12 @@
                                             }
                                           ],
                                           "default": null
+                                        },
+                                        "exclude_dimensions": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string"
+                                          }
                                         }
                                       },
                                       "additionalProperties": false,
@@ -28075,6 +28141,12 @@
                                             }
                                           ],
                                           "default": null
+                                        },
+                                        "exclude_dimensions": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string"
+                                          }
                                         }
                                       },
                                       "additionalProperties": false,

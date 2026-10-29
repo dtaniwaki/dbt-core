@@ -1,0 +1,6 @@
+kind: Features
+body: Add `exclude_dimensions` to ratio and derived metric inputs
+time: 2026-10-29T11:34:51.466746+09:00
+custom:
+    Author: dtaniwaki
+    Issue: TBD
