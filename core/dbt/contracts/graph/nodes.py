@@ -1639,6 +1639,9 @@ class Metric(GraphNode, MetricResource):
     def same_type(self, old: "Metric") -> bool:
         return self.type == old.type
 
+    def same_datatype(self, old: "Metric") -> bool:
+        return self.datatype == old.datatype
+
     def same_type_params(self, old: "Metric") -> bool:
         return True  # TODO
 
@@ -1652,6 +1655,7 @@ class Metric(GraphNode, MetricResource):
             self.same_filter(old)
             and self.same_metadata(old)
             and self.same_type(old)
+            and self.same_datatype(old)
             and self.same_type_params(old)
             and self.same_description(old)
             and self.same_label(old)

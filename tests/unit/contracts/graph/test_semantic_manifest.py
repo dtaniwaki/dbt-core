@@ -1,7 +1,8 @@
+from dataclasses import replace
 from unittest.mock import patch
 
 import pytest
-from metricflow_semantic_interfaces.type_enums import TimeGranularity
+from metricflow_semantic_interfaces.type_enums import DataType, TimeGranularity
 from metricflow_semantic_interfaces.type_enums.metric_type import MetricType
 
 from core.dbt.contracts.graph.manifest import Manifest
@@ -49,6 +50,21 @@ def metrics(
 
 
 class TestSemanticManifest:
+
+    def test_datatype_in_pydantic_manifest(self, manifest, metric, semantic_model):
+        typed_metric = replace(metric, datatype=DataType.DECIMAL)
+        manifest.metrics[typed_metric.unique_id] = typed_metric
+        typed_dimension = replace(semantic_model.dimensions[0], datatype=DataType.DATE)
+        semantic_model.dimensions[0] = typed_dimension
+
+        pydantic_manifest = SemanticManifest(manifest)._get_pydantic_semantic_manifest()
+
+        pydantic_metric = next(m for m in pydantic_manifest.metrics if m.name == metric.name)
+        assert pydantic_metric.datatype == DataType.DECIMAL
+        pydantic_semantic_model = next(
+            sm for sm in pydantic_manifest.semantic_models if sm.name == semantic_model.name
+        )
+        assert pydantic_semantic_model.dimensions[0].datatype == DataType.DATE
 
     def test_validate(self, manifest):
         with patch("dbt.contracts.graph.semantic_manifest.get_flags") as patched_get_flags:

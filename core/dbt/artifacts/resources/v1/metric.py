@@ -6,6 +6,7 @@ from metricflow_semantic_interfaces.references import MeasureReference, MetricRe
 from metricflow_semantic_interfaces.type_enums import (
     AggregationType,
     ConversionCalculationType,
+    DataType,
     MetricType,
     PeriodAggregation,
     TimeGranularity,
@@ -162,6 +163,7 @@ class Metric(GraphResource):
     label: str
     type: MetricType
     type_params: MetricTypeParams
+    datatype: Optional[DataType] = None
     filter: Optional[WhereFilterIntersection] = None
     metadata: Optional[SourceFileMetadata] = None
     time_granularity: Optional[str] = None
