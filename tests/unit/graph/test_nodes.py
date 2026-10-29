@@ -269,6 +269,15 @@ class TestSemanticModel:
         # Relation should not be consided in same_contents
         assert default_semantic_model.same_contents(default_semantic_model_copy)
 
+    @pytest.mark.parametrize("field_name", ["sort_by", "label_by"])
+    def test_semantic_model_same_contents_update_dimension_sort_by_or_label_by(
+        self, default_semantic_model: SemanticModel, field_name: str
+    ):
+        default_semantic_model_copy = deepcopy(default_semantic_model)
+        setattr(default_semantic_model_copy.dimensions[0], field_name, "other_dimension")
+
+        assert not default_semantic_model.same_contents(default_semantic_model_copy)
+
 
 # Infer primary key
 def test_no_primary_key():

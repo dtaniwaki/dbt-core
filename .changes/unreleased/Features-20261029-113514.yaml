@@ -1,0 +1,6 @@
+kind: Features
+body: Add sort_by and label_by to semantic model dimensions
+time: 2026-10-29T11:35:14.417024+09:00
+custom:
+    Author: dtaniwaki
+    Issue: TBD
