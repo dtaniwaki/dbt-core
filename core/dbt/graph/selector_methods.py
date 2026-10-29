@@ -17,6 +17,8 @@ from typing import (
     Union,
 )
 
+from metricflow_semantic_interfaces.type_enums import EntityType
+
 from dbt.contracts.graph.manifest import Manifest
 from dbt.contracts.graph.nodes import (
     Exposure,
@@ -46,6 +48,7 @@ from .graph import UniqueId
 if TYPE_CHECKING:
     from .selector_spec import SelectionSpec
 
+LINKABLE_ENTITY_TYPES = (EntityType.PRIMARY, EntityType.UNIQUE, EntityType.NATURAL)
 SELECTOR_GLOB = "*"
 SELECTOR_DELIMITER = ":"
 
@@ -71,6 +74,7 @@ class MethodName(StrEnum):
     Version = "version"
     SemanticModel = "semantic_model"
     SavedQuery = "saved_query"
+    Dimension = "dimension"
     UnitTest = "unit_test"
     Selector = "selector"
 
@@ -433,6 +437,32 @@ class SemanticModelSelectorMethod(SelectorMethod):
                 continue
 
             yield unique_id
+
+
+class DimensionSelectorMethod(SelectorMethod):
+    def search(self, included_nodes: Set[UniqueId], selector: str) -> Iterator[UniqueId]:
+        owners_by_qualified_name: Dict[str, List[Tuple[UniqueId, bool]]] = {}
+        selected: Set[UniqueId] = set()
+
+        for unique_id, node in self.semantic_model_nodes(included_nodes):
+            for dimension in node.dimensions:
+                if fnmatch(dimension.name, selector):
+                    selected.add(unique_id)
+                for entity in node.entities:
+                    qualified_name = f"{entity.name}__{dimension.name}"
+                    owners_by_qualified_name.setdefault(qualified_name, []).append(
+                        (unique_id, entity.type in LINKABLE_ENTITY_TYPES)
+                    )
+
+        for qualified_name, owners in owners_by_qualified_name.items():
+            if not fnmatch(qualified_name, selector):
+                continue
+            linkable_owners = [unique_id for unique_id, linkable in owners if linkable]
+            selected.update(linkable_owners or [unique_id for unique_id, _ in owners])
+
+        for unique_id, _ in self.semantic_model_nodes(included_nodes):
+            if unique_id in selected:
+                yield unique_id
 
 
 class SavedQuerySelectorMethod(SelectorMethod):
@@ -1058,6 +1088,7 @@ class MethodManager:
         MethodName.Version: VersionSelectorMethod,
         MethodName.SemanticModel: SemanticModelSelectorMethod,
         MethodName.SavedQuery: SavedQuerySelectorMethod,
+        MethodName.Dimension: DimensionSelectorMethod,
         MethodName.UnitTest: UnitTestSelectorMethod,
         MethodName.Selector: SelectorSelectorMethod,
     }

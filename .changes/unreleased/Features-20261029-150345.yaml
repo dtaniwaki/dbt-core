@@ -1,0 +1,6 @@
+kind: Features
+body: 'Add a dimension: node selection method that selects the semantic models declaring a matching dimension'
+time: 2026-10-29T15:03:45.737761+09:00
+custom:
+    Author: dtaniwaki
+    Issue: "16562"
