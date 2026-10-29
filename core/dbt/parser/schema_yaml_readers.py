@@ -772,6 +772,8 @@ class SemanticModelParser(YamlReader):
                     expr=unparsed.expr,
                     metadata=None,  # TODO: requires a fair bit of parsing context
                     config=SemanticLayerElementConfig(meta=unparsed.config.get("meta", {})),
+                    sort_by=unparsed.sort_by,
+                    label_by=unparsed.label_by,
                 )
             )
         return dimensions

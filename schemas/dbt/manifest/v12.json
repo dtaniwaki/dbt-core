@@ -29514,6 +29514,28 @@
                               }
                             ],
                             "default": null
+                          },
+                          "sort_by": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ],
+                            "default": null
+                          },
+                          "label_by": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ],
+                            "default": null
                           }
                         },
                         "additionalProperties": false,
@@ -31174,6 +31196,28 @@
                         }
                       },
                       "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null
+                },
+                "sort_by": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null
+                },
+                "label_by": {
+                  "anyOf": [
+                    {
+                      "type": "string"
                     },
                     {
                       "type": "null"
