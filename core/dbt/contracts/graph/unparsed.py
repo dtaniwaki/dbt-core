@@ -343,6 +343,7 @@ class UnparsedMetricInput(dbtClassMixin):
     alias: Optional[str] = None
     offset_window: Optional[str] = None
     offset_to_grain: Optional[str] = None
+    exclude_dimensions: List[str] = field(default_factory=list)
 
 
 @dataclass
