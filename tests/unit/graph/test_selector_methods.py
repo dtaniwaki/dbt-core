@@ -6,16 +6,19 @@ from pathlib import Path
 from unittest import mock
 
 import pytest
+from metricflow_semantic_interfaces.type_enums import DimensionType, EntityType
 
 import dbt.compilation
 import dbt_common.exceptions
 from dbt.artifacts.resources import ColumnInfo, FileHash
+from dbt.artifacts.resources.v1.semantic_model import Dimension, Entity
 from dbt.contracts.graph.manifest import Manifest
 from dbt.contracts.state import PreviousState
 from dbt.graph import NodeSelector
 from dbt.graph.selector_methods import (
     AccessSelectorMethod,
     ConfigSelectorMethod,
+    DimensionSelectorMethod,
     ExposureSelectorMethod,
     FileSelectorMethod,
     GroupSelectorMethod,
@@ -1232,3 +1235,69 @@ class TestSeedNodeSameSeedsFallback:
         previous = self._make_seed_node(FileHash.path("seeds/other.csv"))
         # path type is excluded from fallback
         assert current.same_seeds(previous) is False
+
+
+def _semantic_model_with(manifest, name, dimensions, entities):
+    model = make_model("pkg", f"{name}_model", "select 1 as id")
+    manifest.nodes[model.unique_id] = model
+    semantic_model = make_semantic_model("pkg", name, model)
+    semantic_model.dimensions = [
+        Dimension(name=dimension, type=DimensionType.CATEGORICAL) for dimension in dimensions
+    ]
+    semantic_model.entities = [Entity(name=n, type=t) for n, t in entities]
+    manifest.semantic_models[semantic_model.unique_id] = semantic_model
+    return semantic_model
+
+
+def test_select_dimension(manifest: Manifest) -> None:
+    _semantic_model_with(manifest, "members", ["gender", "age"], [("member", EntityType.PRIMARY)])
+    _semantic_model_with(
+        manifest,
+        "visits",
+        ["channel"],
+        [("visit", EntityType.PRIMARY), ("member", EntityType.FOREIGN)],
+    )
+    methods = MethodManager(manifest, None)
+    method = methods.get_method("dimension", [])
+    assert isinstance(method, DimensionSelectorMethod)
+
+    assert search_manifest_using_method(manifest, method, "gender") == {"members"}
+    assert search_manifest_using_method(manifest, method, "member__gender") == {"members"}
+    assert search_manifest_using_method(manifest, method, "ge*") == {"members"}
+    assert search_manifest_using_method(manifest, method, "visit__*") == {"visits"}
+    assert search_manifest_using_method(manifest, method, "*__*") == {"members", "visits"}
+    assert not search_manifest_using_method(manifest, method, "visit__gender")
+    assert not search_manifest_using_method(manifest, method, "missing")
+    assert not search_manifest_using_method(manifest, method, "member__missing")
+
+
+def test_select_dimension_ambiguous_name(manifest: Manifest) -> None:
+    _semantic_model_with(manifest, "members", ["region"], [("member", EntityType.PRIMARY)])
+    _semantic_model_with(manifest, "stores", ["region"], [("store", EntityType.PRIMARY)])
+    methods = MethodManager(manifest, None)
+    method = methods.get_method("dimension", [])
+
+    assert search_manifest_using_method(manifest, method, "region") == {"members", "stores"}
+    assert search_manifest_using_method(manifest, method, "member__region") == {"members"}
+
+
+def test_select_dimension_prefers_semantic_model_owning_entity(manifest: Manifest) -> None:
+    _semantic_model_with(manifest, "members", ["gender"], [("member", EntityType.PRIMARY)])
+    _semantic_model_with(
+        manifest,
+        "visits",
+        ["gender"],
+        [("visit", EntityType.PRIMARY), ("member", EntityType.FOREIGN)],
+    )
+    _semantic_model_with(
+        manifest,
+        "orders",
+        ["tier"],
+        [("order", EntityType.PRIMARY), ("customer", EntityType.FOREIGN)],
+    )
+    methods = MethodManager(manifest, None)
+    method = methods.get_method("dimension", [])
+
+    assert search_manifest_using_method(manifest, method, "member__gender") == {"members"}
+    assert search_manifest_using_method(manifest, method, "gender") == {"members", "visits"}
+    assert search_manifest_using_method(manifest, method, "customer__tier") == {"orders"}
