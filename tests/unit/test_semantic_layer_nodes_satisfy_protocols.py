@@ -16,6 +16,7 @@ from metricflow_semantic_interfaces.protocols import (
 )
 from metricflow_semantic_interfaces.type_enums import (
     AggregationType,
+    DataType,
     DimensionType,
     EntityType,
     MetricType,
@@ -379,8 +380,10 @@ def test_dimension_satisfies_protocol_optionals_specified(
         type_params=dimension_type_params,
         expr="1",
         metadata=source_file_metadata,
+        datatype=DataType.BOOLEAN,
     )
     assert isinstance(dimension, RuntimeCheckableDimension)
+    assert dimension.datatype == DataType.BOOLEAN
 
 
 def test_entity_satisfies_protocol_optionals_unspecified():
@@ -469,8 +472,10 @@ def test_metric_node_satisfies_protocol_optionals_specified(
         filter=where_filter,
         metadata=source_file_metadata,
         group="test_group",
+        datatype=DataType.DECIMAL,
     )
     assert isinstance(metric, RuntimeCheckableMetric)
+    assert metric.datatype == DataType.DECIMAL
 
 
 def test_where_filter_satisfies_protocol(where_filter):

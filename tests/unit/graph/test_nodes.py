@@ -10,6 +10,7 @@ from metricflow_semantic_interfaces.references import (
 )
 from metricflow_semantic_interfaces.type_enums import (
     AggregationType,
+    DataType,
     DimensionType,
     EntityType,
     MetricType,
@@ -30,7 +31,9 @@ from dbt.artifacts.resources import (
 )
 from dbt.artifacts.resources.v1.semantic_model import NodeRelation
 from dbt.contracts.graph.model_config import TestConfig
-from dbt.contracts.graph.nodes import ColumnInfo, ModelNode, ParsedNode, SemanticModel
+from dbt.contracts.graph.nodes import ColumnInfo
+from dbt.contracts.graph.nodes import Metric as MetricNode
+from dbt.contracts.graph.nodes import ModelNode, ParsedNode, SemanticModel
 from dbt.node_types import NodeType
 from dbt_common.contracts.constraints import (
     ColumnLevelConstraint,
@@ -262,6 +265,14 @@ class TestSemanticModel:
 
         assert not default_semantic_model.same_contents(default_semantic_model_copy)
 
+    def test_semantic_model_same_contents_update_dimension_datatype(
+        self, default_semantic_model: SemanticModel
+    ):
+        default_semantic_model_copy = deepcopy(default_semantic_model)
+        default_semantic_model_copy.dimensions[0].datatype = DataType.BOOLEAN
+
+        assert not default_semantic_model.same_contents(default_semantic_model_copy)
+
     def test_semantic_model_same_contents_different_node_relation(
         self,
         default_semantic_model: SemanticModel,
@@ -289,6 +300,14 @@ class TestSemanticModel:
         setattr(default_semantic_model_copy.dimensions[0], field_name, "other_dimension")
 
         assert not default_semantic_model.same_contents(default_semantic_model_copy)
+
+    def test_metric_same_contents_update_datatype(self, default_simple_metric: Metric):
+        metric = MetricNode.from_dict(default_simple_metric.to_dict())
+        metric_copy = deepcopy(metric)
+        assert metric.same_contents(metric_copy)
+
+        metric_copy.datatype = DataType.DECIMAL
+        assert not metric.same_contents(metric_copy)
 
 
 # Infer primary key

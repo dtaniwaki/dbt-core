@@ -14201,6 +14201,28 @@
             },
             "additionalProperties": false
           },
+          "datatype": {
+            "anyOf": [
+              {
+                "enum": [
+                  "string",
+                  "integer",
+                  "decimal",
+                  "float",
+                  "boolean",
+                  "date",
+                  "time",
+                  "datetime",
+                  "datetime_tz",
+                  "opaque"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
           "filter": {
             "anyOf": [
               {
@@ -28332,6 +28354,28 @@
                       },
                       "additionalProperties": false
                     },
+                    "datatype": {
+                      "anyOf": [
+                        {
+                          "enum": [
+                            "string",
+                            "integer",
+                            "decimal",
+                            "float",
+                            "boolean",
+                            "date",
+                            "time",
+                            "datetime",
+                            "datetime_tz",
+                            "opaque"
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "default": null
+                    },
                     "filter": {
                       "anyOf": [
                         {
@@ -29614,6 +29658,28 @@
                             "anyOf": [
                               {
                                 "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ],
+                            "default": null
+                          },
+                          "datatype": {
+                            "anyOf": [
+                              {
+                                "enum": [
+                                  "string",
+                                  "integer",
+                                  "decimal",
+                                  "float",
+                                  "boolean",
+                                  "date",
+                                  "time",
+                                  "datetime",
+                                  "datetime_tz",
+                                  "opaque"
+                                ]
                               },
                               {
                                 "type": "null"
@@ -31356,6 +31422,28 @@
                   "anyOf": [
                     {
                       "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null
+                },
+                "datatype": {
+                  "anyOf": [
+                    {
+                      "enum": [
+                        "string",
+                        "integer",
+                        "decimal",
+                        "float",
+                        "boolean",
+                        "date",
+                        "time",
+                        "datetime",
+                        "datetime_tz",
+                        "opaque"
+                      ]
                     },
                     {
                       "type": "null"

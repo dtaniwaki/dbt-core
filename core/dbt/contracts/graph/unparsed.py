@@ -7,6 +7,7 @@ from typing import Any, Dict, List, Literal, Optional, Sequence, Union
 
 from metricflow_semantic_interfaces.type_enums import (
     ConversionCalculationType,
+    DataType,
     DimensionType,
     PeriodAggregation,
 )
@@ -173,6 +174,7 @@ class UnparsedDimension(UnparsedDimensionBase):
     expr: Optional[str] = None
     sort_by: Optional[str] = None
     label_by: Optional[str] = None
+    datatype: Optional[DataType] = None
 
 
 @dataclass
@@ -396,6 +398,7 @@ class UnparsedMetricBase(dbtClassMixin):
     # Note: `Union` must be the outermost part of the type annotation for serialization to work properly.
     filter: Union[str, List[str], None] = None
     time_granularity: Optional[str] = None
+    datatype: Optional[DataType] = None
 
     config: Dict[str, Any] = field(default_factory=dict)
 

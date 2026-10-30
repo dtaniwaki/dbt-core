@@ -611,6 +611,7 @@ class MetricParser(YamlReader):
                 default_agg_time_dimension=default_agg_time_dimension,
             ),
             time_granularity=unparsed.time_granularity,
+            datatype=unparsed.datatype,
             filter=parse_where_filter(unparsed.filter),
             meta=meta,
             tags=config.tags,
@@ -790,6 +791,7 @@ class SemanticModelParser(YamlReader):
                     config=SemanticLayerElementConfig(meta=unparsed.config.get("meta", {})),
                     sort_by=unparsed.sort_by,
                     label_by=unparsed.label_by,
+                    datatype=unparsed.datatype,
                 )
             )
         return dimensions
