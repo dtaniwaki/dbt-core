@@ -90,6 +90,8 @@ class Dimension(dbtClassMixin):
     metadata: Optional[SourceFileMetadata] = None
     config: Optional[SemanticLayerElementConfig] = None
     datatype: Optional[DataType] = None
+    sort_by: Optional[str] = None
+    label_by: Optional[str] = None
 
     @property
     def reference(self) -> DimensionReference:

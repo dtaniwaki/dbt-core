@@ -171,6 +171,8 @@ class UnparsedDimension(UnparsedDimensionBase):
     name: str
     type_params: Optional[UnparsedDimensionTypeParams] = None
     expr: Optional[str] = None
+    sort_by: Optional[str] = None
+    label_by: Optional[str] = None
 
 
 @dataclass
